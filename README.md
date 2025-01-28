@@ -47,7 +47,11 @@ $$
 
 
 
-- `ctrRLWE` [2]: 
+- `ctrRLWE`: This implementation is based on the encrypted controller design proposed in Section IV of [2].
+    The encrypted controller is non-recursive, although it is based on a dynamic controller.
+    This is enabled by ``re-encryption'' of the encrypted controller output at the actuator, which requires an additional communication link between the plant and the controller.
+    However, under sufficiently fast communication, the encrypted controller operates faster than that of `ctrRGSW'.
+    The example code is based on the BGV scheme, but this can be easily modified to use other Ring-LWE based schemes.
 
 - In this example, we use the four-tank system [7] as the plant and pre-design an observer-based controller. Please refer to [8] for more details regarding the setting.
 
