@@ -9,7 +9,7 @@ The documentation for these codes can be found here (to be updated).
     The parameters obtained from this code are used in `main.go`.
 - `main.go`: This Go code encrypts the pre-designed controller from \verb|conversion.m| and runs the encrypted control system.
     It generates five csv files:
-  - state.csv`: This contains the state data of the plant controlled by the encrypted controller.
+  - `state.csv`: This contains the state data of the plant controlled by the encrypted controller.
   - `uEnc.csv`: This saves the control input from the encrypted controller. These are the plaintexts which are injected as the plant input.
   - `yEnc.csv`: This saves the plant output of the encrypted control system.
   - `uDiff.csv`: This signifies the performance error, which is the norm of the difference between the control inputs from the encrypted controller and the pre-designed controller.
