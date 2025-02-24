@@ -19,16 +19,20 @@ func main() {
 	// Refer to ``Homomorphic encryption standard''
 	params, _ := rlwe.NewParametersFromLiteral(rlwe.ParametersLiteral{
 		// log2 of polynomial degree
-		LogN: 11,
+		LogN: 4,
 		// Size of ciphertext modulus (Q)
-		LogQ: []int{56},
+		LogQ: []int{12},
 		// Size of plaintext modulus (P)
-		LogP:    []int{56},
+		// LogP:    []int{20},
 		NTTFlag: true,
 	})
 	fmt.Println("Degree of polynomials:", params.N())
 	fmt.Println("Ciphertext modulus:", params.QBigInt())
 	fmt.Println("Special modulus:", params.PBigInt())
+	fmt.Println("primitive root:", params.RingQ().SubRings[0].NTTTable.NthRoot)
+	fmt.Println("primitive root:", params.RingQ().SubRings[0].NTTTable.PrimitiveRoot)
+	fmt.Println("primitive root:", params.RingQ().SubRings[0].N)
+
 	// Default secret key distribution
 	// Each coefficient in the polynomial is uniformly sampled in [-1, 0, 1]
 	fmt.Println("Secret key distribution:", params.Xs())
@@ -134,7 +138,7 @@ func main() {
 
 	// ============== Simulation ==============
 	// Number of simulation steps
-	iter := 2000
+	iter := 100
 	fmt.Printf("Number of iterations: %v", iter)
 
 	// *****************

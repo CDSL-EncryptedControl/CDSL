@@ -212,7 +212,8 @@ func ModVecFloat(v []float64, q uint64) []uint64 {
 	row := len(v)
 	vOut := make([]uint64, row)
 	for r := 0; r < row; r++ {
-		vOut[r] = uint64(v[r] - math.Floor(v[r]/qf)*qf)
+		// vOut[r] = uint64(v[r] - math.Floor(v[r]/qf)*qf)
+		vOut[r] = uint64(v[r]) - uint64(math.Floor(v[r]/qf))*q
 	}
 	return vOut
 }
