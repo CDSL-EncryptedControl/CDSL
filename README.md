@@ -11,38 +11,13 @@ The encrypted controllers are designed based on the state-of-the-art methods dev
 ### Features
 
 
-Given a plant 
-
-$$
-\begin{aligned}
-x_p(t+1) &= Ax_p(t) + Bu(t), \quad x_p(0) = x_p^{\mathsf{ini}} \\
-y(t) &= Cx_p(t)
-\end{aligned}
-$$
-
-and a pre-designed stabilizng controller (which is controllable and observable)
-
-$$
-\begin{aligned}
-x(t+1) &= Fx(t) + Gy(t), \quad x(0) = x^{\mathsf{ini}} \\
-u(t) &= Hx(t)
-\end{aligned}
-$$
-
-this code provides two methods to operate the linear dynamic controller over encrypted data, using a Ring-LWE based cryptosystem. 
+This code provides two methods to operate the linear dynamic controller over encrypted data, using a Ring-LWE based cryptosystem. 
 
 
 - `ctrRGSW` [1]: Supports unlimited number of recursive homomorhpic multiplications without the use of bootstrapping. More specifically, the encrypted controller state is recursively multiplied to the encrypted state matrix without decryption. The effect of error growth is suppressed by the stability of the closed-loop system. 
     - `ctrRGSW/noPacking`: Naive implementation that does not use packing. 
     - `ctrRGSW/packing`: A novel "coefficient packing" technique is applied, resulting in enhanced computation speed and memory efficiency   
-    - `ctrRGSW/conversion.m`: Converts the state matrix of the controller into integers based on the apporach of [3]:
-       - Given $F$ and $H$, it finds an appropriate $R$ such that $F-RH$ is an integer matrix. Then, the state dynamics of the controller can be rewritten as follows regarding $u(t)$ as a fed-back input.
-       - One may use other methods, such as [4-6], to convert the state matrix into integers while preserving the control performance without using re-encryption. 
-
-
-$$
-x(t+1) = (F-RH)x(t) + Gy(t) + Ru(t)
-$$
+    
 
 
 
