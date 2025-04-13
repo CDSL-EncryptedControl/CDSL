@@ -22,7 +22,7 @@ func main() {
 	// Refer to ``Homomorphic encryption standard''
 	params, _ := rlwe.NewParametersFromLiteral(rlwe.ParametersLiteral{
 		// log2 of polynomial degree
-		LogN: 13,
+		LogN: 12,
 		// Size of ciphertext modulus (Q)
 		LogQ: []int{56},
 		// Size of special modulus (P)
@@ -91,10 +91,10 @@ func main() {
 	}
 	// Controller initial state
 	x_ini := []float64{
-		0.5,
-		0.02,
 		-1,
-		0.9,
+		0,
+		-1,
+		0,
 	}
 	// dimensions
 	n := len(F)
@@ -103,7 +103,7 @@ func main() {
 
 	// ============== Quantization parameters ==============
 	s := 1 / 10000.0
-	L := 1 / 10000.0
+	L := 1 / 1000.0
 	r := 1 / 10000.0
 	fmt.Printf("Scaling parameters 1/L: %v, 1/s: %v, 1/r: %v \n", 1/L, 1/s, 1/r)
 	// *****************************************************************
@@ -239,7 +239,7 @@ func main() {
 	xp = xp_ini
 
 	// Dimension: 1-by-(# of elements)
-	xBar := utils.ScalVecMult(1/(r*s), x_ini)
+	xBar := utils.RoundVec(utils.ScalVecMult(1/(r*s), x_ini))
 	xCtPack := RLWE.EncPack(xBar, tau, 1/L, *encryptorRLWE, ringQ, params)
 
 	// For time check
@@ -282,7 +282,7 @@ func main() {
 		RuCt := RGSW.MultPack(uReEnc, ctR, evaluatorRGSW, ringQ, params)
 		xCtPack = RLWE.Add(FxCt, GyCt, RuCt, params)
 
-		period[i] = []float64{float64(time.Since(startPeriod[i]).Microseconds()) / 1000}
+		period[i] = []float64{float64(time.Since(startPeriod[i]).Nanoseconds()) / 1000}
 
 		// **** Plant ****
 		// State update

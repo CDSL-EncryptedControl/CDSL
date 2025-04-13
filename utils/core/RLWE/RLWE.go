@@ -72,12 +72,31 @@ func UnpackCt(ctRLWE *rlwe.Ciphertext, n int, tau int, evaluatorRLWE *rlwe.Evalu
 // - v: n x 1 float vector
 // Output
 // - ctOut: n x l RLWE vector
-func Enc(v []float64, scale float64, encryptorRLWE rlwe.Encryptor, ringQ *ring.Ring, params rlwe.Parameters) []*rlwe.Ciphertext {
-	var err error
+// func Enc(v []float64, scale float64, encryptorRLWE rlwe.Encryptor, ringQ *ring.Ring, params rlwe.Parameters) []*rlwe.Ciphertext {
+// 	var err error
 
+// 	row := len(v)
+// 	scaleV := utils.ScalVecMult(scale, v)
+// 	modV := utils.ModVecFloat(scaleV, params.Q()[0])
+
+// 	ctOut := make([]*rlwe.Ciphertext, row)
+// 	for r := 0; r < row; r++ {
+// 		pt := rlwe.NewPlaintext(params, params.MaxLevel())
+// 		pt.Value.Coeffs[0][0] = modV[r]
+// 		ringQ.NTT(pt.Value, pt.Value)
+// 		ctOut[r], err = encryptorRLWE.EncryptNew(pt)
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 	}
+
+//		return ctOut
+//	}
+func Enc(v []int64, scale float64, encryptorRLWE rlwe.Encryptor, ringQ *ring.Ring, params rlwe.Parameters) []*rlwe.Ciphertext {
+	var err error
 	row := len(v)
-	scaleV := utils.ScalVecMult(scale, v)
-	modV := utils.ModVecFloat(scaleV, params.Q()[0])
+	scaleV := utils.ScalVecMultInt(int64(scale), v)
+	modV := utils.ModVec(scaleV, params.Q()[0])
 
 	ctOut := make([]*rlwe.Ciphertext, row)
 	for r := 0; r < row; r++ {
@@ -98,12 +117,34 @@ func Enc(v []float64, scale float64, encryptorRLWE rlwe.Encryptor, ringQ *ring.R
 // - v: n x 1 float vector
 // Output
 // - ctOut: RLWE ciphertext
-func EncPack(v []float64, tau int, scale float64, encryptorRLWE rlwe.Encryptor, ringQ *ring.Ring, params rlwe.Parameters) *rlwe.Ciphertext {
+// func EncPack(v []float64, tau int, scale float64, encryptorRLWE rlwe.Encryptor, ringQ *ring.Ring, params rlwe.Parameters) *rlwe.Ciphertext {
+// 	var err error
+
+// 	row := len(v)
+// 	scaleV := utils.ScalVecMult(scale, v)
+// 	modV := utils.ModVecFloat(scaleV, params.Q()[0])
+
+// 	ctOut := rlwe.NewCiphertext(params, 1, params.MaxLevel())
+// 	pt := rlwe.NewPlaintext(params, params.MaxLevel())
+// 	for r := 0; r < row; r++ {
+// 		// Store in the packing slots
+// 		pt.Value.Coeffs[0][params.N()*r/tau] = modV[r]
+// 	}
+// 	ringQ.NTT(pt.Value, pt.Value)
+// 	ctOut, err = encryptorRLWE.EncryptNew(pt)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+
+// 	return ctOut
+// }
+
+func EncPack(v []int64, tau int, scale float64, encryptorRLWE rlwe.Encryptor, ringQ *ring.Ring, params rlwe.Parameters) *rlwe.Ciphertext {
 	var err error
 
 	row := len(v)
-	scaleV := utils.ScalVecMult(scale, v)
-	modV := utils.ModVecFloat(scaleV, params.Q()[0])
+	scaleV := utils.ScalVecMultInt(int64(scale), v)
+	modV := utils.ModVec(scaleV, params.Q()[0])
 
 	ctOut := rlwe.NewCiphertext(params, 1, params.MaxLevel())
 	pt := rlwe.NewPlaintext(params, params.MaxLevel())
@@ -139,6 +180,7 @@ func Dec(ctRLWE []*rlwe.Ciphertext, decryptorRLWE rlwe.Decryptor, scale float64,
 			params.RingQ().INTT(pt.Value, pt.Value)
 		}
 		ringQ.SubScalar(ctRLWE[r].Value[0], offset, ctRLWE[r].Value[0])
+		// ringQ.SubScalar(pt.Value, offset, pt.Value)
 		// Constant terms
 		val := float64(pt.Value.Coeffs[0][0])
 		// Mapping to [-q/2, q/2)
@@ -167,6 +209,7 @@ func DecUnpack(ctRLWE *rlwe.Ciphertext, m int, tau int, decryptorRLWE rlwe.Decry
 		params.RingQ().INTT(pt.Value, pt.Value)
 	}
 	ringQ.SubScalar(ctRLWE.Value[0], offset, ctRLWE.Value[0])
+	// ringQ.SubScalar(pt.Value, offset, pt.Value)
 	// Constant terms
 	for r := 0; r < m; r++ {
 		val := float64(pt.Value.Coeffs[0][params.N()*r/tau])

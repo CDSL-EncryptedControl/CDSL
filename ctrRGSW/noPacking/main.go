@@ -19,11 +19,11 @@ func main() {
 	// Refer to ``Homomorphic encryption standard''
 	params, _ := rlwe.NewParametersFromLiteral(rlwe.ParametersLiteral{
 		// log2 of polynomial degree
-		LogN: 4,
+		LogN: 12,
 		// Size of ciphertext modulus (Q)
-		LogQ: []int{12},
-		// Size of plaintext modulus (P)
-		// LogP:    []int{20},
+		LogQ: []int{56},
+		// Size of special modulus (P)x
+		LogP:    []int{51},
 		NTTFlag: true,
 	})
 	fmt.Println("Degree of polynomials:", params.N())
@@ -92,15 +92,15 @@ func main() {
 	}
 	// Controller initial state
 	x0 := []float64{
-		0.5,
-		0.02,
 		-1,
-		0.9,
+		0,
+		-1,
+		0,
 	}
 
 	// ============== Quantization parameters ==============
 	s := 1 / 10000.0
-	L := 1 / 1000.0
+	L := 1 / 10000.0
 	r := 1 / 1000.0
 	fmt.Printf("Scaling parameters 1/L: %v, 1/s: %v, 1/r: %v \n", 1/L, 1/s, 1/r)
 	// *****************************************************************
@@ -138,8 +138,8 @@ func main() {
 
 	// ============== Simulation ==============
 	// Number of simulation steps
-	iter := 100
-	fmt.Printf("Number of iterations: %v", iter)
+	iter := 1000
+	fmt.Printf("Number of iterations: %v\n", iter)
 
 	// *****************
 	// 1) Plant + unencrypted (original) controller
@@ -186,7 +186,9 @@ func main() {
 	xp = xp0
 
 	// Controller state encryption
-	xBar := utils.ScalVecMult(1/(r*s), x0)
+	// xBar := utils.RoundVec(utils.ScalVecMult(1/(r*s), x0))
+
+	xBar := utils.RoundVec(utils.ScalVecMult(1/(r*s), x0))
 	xCt := RLWE.Enc(xBar, 1/L, *encryptorRLWE, ringQ, params)
 
 	// For time check
@@ -213,7 +215,8 @@ func main() {
 		u := RLWE.Dec(uCt, *decryptorRLWE, r*s*s*L, ringQ, params)
 
 		// Re-encrypt output
-		uReEnc := RLWE.Enc(u, 1/(r*L), *encryptorRLWE, ringQ, params)
+		uBar := utils.RoundVec(utils.ScalVecMult(1/r, u))
+		uReEnc := RLWE.Enc(uBar, 1/L, *encryptorRLWE, ringQ, params)
 
 		// **** Encrypted Controller ****
 		// State update
@@ -222,7 +225,7 @@ func main() {
 		RuCt := RGSW.Mult(uReEnc, ctR, evaluator, ringQ, params)
 		xCt = RLWE.AddVec(FxCt, GyCt, RuCt, params)
 
-		period[i] = []float64{float64(time.Since(startPeriod[i]).Microseconds()) / 1000}
+		period[i] = []float64{float64(time.Since(startPeriod[i]).Nanoseconds()) / 1000}
 
 		// **** Plant ****
 		// State update

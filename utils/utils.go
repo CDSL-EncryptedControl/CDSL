@@ -95,7 +95,8 @@ func ModMatFloat(M [][]float64, q uint64) [][]uint64 {
 	for r := 0; r < row; r++ {
 		MOut[r] = make([]uint64, col)
 		for c := 0; c < col; c++ {
-			MOut[r][c] = uint64(M[r][c] - math.Floor(M[r][c]/qf)*qf)
+			// MOut[r][c] = uint64(M[r][c] - math.Floor(M[r][c]/qf)*qf)
+			MOut[r][c] = uint64(M[r][c]) - uint64(math.Floor(M[r][c]/qf))*q
 		}
 	}
 	return MOut
@@ -186,6 +187,16 @@ func ScalVecMult(s float64, v []float64) []float64 {
 	return vOut
 }
 
+func ScalVecMultInt(s int64, v []int64) []int64 {
+	row := len(v)
+
+	vOut := make([]int64, row)
+	for r := 0; r < row; r++ {
+		vOut[r] = s * v[r]
+	}
+	return vOut
+}
+
 // Inner sum of vector elements (mod q)
 // Input
 // - v : m x 1 uint64 vector
@@ -214,6 +225,17 @@ func ModVecFloat(v []float64, q uint64) []uint64 {
 	for r := 0; r < row; r++ {
 		// vOut[r] = uint64(v[r] - math.Floor(v[r]/qf)*qf)
 		vOut[r] = uint64(v[r]) - uint64(math.Floor(v[r]/qf))*q
+	}
+	return vOut
+}
+
+func ModVec(v []int64, q uint64) []uint64 {
+	qf := float64(q)
+	row := len(v)
+	vOut := make([]uint64, row)
+	for r := 0; r < row; r++ {
+		// vOut[r] = uint64(v[r] - math.Floor(v[r]/qf)*qf)
+		vOut[r] = uint64(v[r] - int64(math.Floor(float64(v[r])/qf))*int64(q))
 	}
 	return vOut
 }
@@ -266,11 +288,20 @@ func Vec2Norm(v []float64) float64 {
 // - v : n x 1 float vector
 // Output
 // - v : n x 1 float vector
-func RoundVec(v []float64) []float64 {
+//
+//	func RoundVec(v []float64) []float64 {
+//		row := len(v)
+//		vOut := make([]float64, row)
+//		for r := 0; r < row; r++ {
+//			vOut[r] = math.Round(v[r])
+//		}
+//		return vOut
+//	}
+func RoundVec(v []float64) []int64 {
 	row := len(v)
-	vOut := make([]float64, row)
+	vOut := make([]int64, row)
 	for r := 0; r < row; r++ {
-		vOut[r] = math.Round(v[r])
+		vOut[r] = int64(math.Round(v[r]))
 	}
 	return vOut
 }
