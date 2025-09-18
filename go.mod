@@ -1,6 +1,6 @@
 module github.com/CDSL-EncryptedControl/CDSL
 
-go 1.23.4
+go 1.23
 
 require github.com/tuneinsight/lattigo/v6 v6.1.0
 

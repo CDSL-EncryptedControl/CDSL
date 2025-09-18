@@ -225,7 +225,7 @@ func main() {
 		RuCt := RGSW.Mult(uReEnc, ctR, evaluator, ringQ, params)
 		xCt = RLWE.AddVec(FxCt, GyCt, RuCt, params)
 
-		period[i] = []float64{float64(time.Since(startPeriod[i]).Nanoseconds()) / 1000}
+		period[i] = []float64{float64(time.Since(startPeriod[i]).Milliseconds()) }
 
 		// **** Plant ****
 		// State update

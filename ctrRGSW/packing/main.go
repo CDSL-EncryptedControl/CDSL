@@ -282,7 +282,7 @@ func main() {
 		RuCt := RGSW.MultPack(uReEnc, ctR, evaluatorRGSW, ringQ, params)
 		xCtPack = RLWE.Add(FxCt, GyCt, RuCt, params)
 
-		period[i] = []float64{float64(time.Since(startPeriod[i]).Nanoseconds()) / 1000}
+		period[i] = []float64{float64(time.Since(startPeriod[i]).Milliseconds()) }
 
 		// **** Plant ****
 		// State update
