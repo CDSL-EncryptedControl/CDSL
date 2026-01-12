@@ -25,6 +25,7 @@ plant_d = c2d(ss(A,B,C,D),Ts);
 n = length(plant_d.B);
 
 Q = P2M(Np,n); % Toeplitz matrix T_n(Np)
+Q2 = Q(n+1:end,:);
 P = P2M(Dp,n); % Toeplitz matrix T_n(Dp)
 
 iter_max = 2; % maximum number of iterations
@@ -132,8 +133,6 @@ for j = 1:trial
         continue;
     end
     % ===================================
-
-    Q2 = Q(n+1:end,:);
 
     % iterative update of alpha, beta, gamma
 
