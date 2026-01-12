@@ -30,6 +30,10 @@ This code provides two methods to operate the linear dynamic controller over enc
 
 - In this example, we use the four-tank system [7] as the plant and pre-design an observer-based controller. Please refer to [8] for more details regarding the setting.
 
+
+- `integer_ctr` [9]: Provides algorithms for design of controllers having integer coefficients, a property that is required to implement linear dynamic controllers over encrypted data.
+    - `stabilization`: Finds a stabilizing controller having integer coefficients for any given discrete-time LTI plant. (Section III of [9])
+
 ---
 
 ### How to use
@@ -105,3 +109,5 @@ Junsoo Kim - junsookim@seoultech.ac.kr
 [7] [K. Johansson, “The quadruple-tank process: A multivariable laboratory process with an adjustable zero,” IEEE Trans. Control Sys. Technol., vol. 8, no. 3, pp. 456–465, 2000.](https://ieeexplore.ieee.org/abstract/document/845876?casa_token=1CWEIgmKIscAAAAA:Hh3D4_xn5B8MWVoMpQHof8glwtWpGXMuddehBoKXbZAOh2WwsDlemeiWeZ6nAwQGThjhYYw1wQ)
 
 [8] [Y. Jang, J. Lee, and J. Kim, "Documentation on encrypted dynamic control simulation code using Ring-LWE based cryptosystems," ](link)
+
+[9] [J. Lee, D. Lee, and J. Kim, "Stabilization by controllers having integer coefficients," arXiv:2505.00481.](https://arxiv.org/abs/2505.00481)
