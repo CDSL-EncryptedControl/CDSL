@@ -33,6 +33,7 @@ This code provides two methods to operate the linear dynamic controller over enc
 
 - `integer_ctr` [9]: Provides algorithms for design of controllers having integer coefficients, a property that is required to implement linear dynamic controllers over encrypted data.
     - `stabilization`: Finds a stabilizing controller having integer coefficients for any given discrete-time LTI plant. (Section III of [9])
+    - `conversion`: Converts a pre-designed controller into one having integer coefficients while preserving the original closed-loop transfer function. (Section IV of [9])
 
 ---
 
